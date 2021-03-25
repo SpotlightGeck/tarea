@@ -50,49 +50,41 @@
 		 var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
 		 var geometry = new THREE.ConeGeometry( 1, 1, 16);
 
-		 //Colores de los cubos
+		 //Colores de los conos
 		 var material = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
 		 var material2 = new THREE.LineBasicMaterial( { color: 0xFFFFFF } );
 
 		 //Crear los objetos supuerpuestos
-		 object  = new THREE.Mesh( geometry, material );//Primer cubo
-		 object2  = new THREE.Mesh( geometry, material2 );//Segundo cubo
+		 object  = new THREE.Mesh( geometry, material );//Primer cono
+		 object2  = new THREE.Mesh( geometry, material2 );//Segundo cono
 
-     var rx=18.435*(Math.PI/180);
-     var ry=90*(Math.PI/180);
-     var rz=90*(Math.PI/180);
-     var ty=1;
-     var sy=3;
-     var a = new THREE.Matrix4();
 
-		 //Se pone los valores de la traslacion y escalado
-		 a.set
-			 ( 	1, 0, 0, 0,
- 					0, Math.cos(ry), -Math.sin(ry), 0,
- 					0, Math.sin(ry), Math.cos(ry), 0.5,
-          0, 0, 0, 1	);
-
-     object.applyMatrix4(a);
+     //Se pone los conos en la posicion inicial del ejercicio
+     object.applyMatrix4(matrizEjercicio(90, 0.5));
 		 object.elementsNeedUpdate=true;
 
-     object2.applyMatrix4(a);
+     object2.applyMatrix4(matrizEjercicio(90, 0.5));
 		 object2.elementsNeedUpdate=true;
 
+     //Se escala el cono en un factor de 3 en la coordenada z
      object.applyMatrix4(matrizEscalado(1,1,3));
 		 object.elementsNeedUpdate=true;
 
+     //Se rota 90 grados antihorario con respecto a la coordenada z
      object.applyMatrix4(matrizRy(90));
 		 object.elementsNeedUpdate=true;
 
+     //Se mueve el cono una unidad hacia arriba
      object.applyMatrix4(matrizTraslacion(0,1,0));
 		 object.elementsNeedUpdate=true;
 
+     //Se rota el cono 18,435 grados horario con respecto a la coordenada z
      object.applyMatrix4(matrizRz(-18.435));
 		 object.elementsNeedUpdate=true;
 
 
 
-		 //Se añaden los 3 cubos a la escena
+		 //Se añaden los 2 conos a la escena
 		 scene.add( object );
 		 scene.add( object2 );
 
@@ -126,26 +118,31 @@
 
 
 
-	 //Funcion de la matrizEjercicio
-	 function matrizEjercicio(rx, ry, rz, ty, sy)
+	 //Funcion de la matrizEjercicio para posicionar los conos en el origen
+	 function matrizEjercicio(angulo, ty)
 	 {
+
 		 //Se crea la matriz 4x4
 		 var t = new THREE.Matrix4();
+     //Se pone el angulo en radianes
+     angulo=angulo*(Math.PI/180);
 
-		 //Se pone los valores de la traslacion y escalado
-		 t.set
-			 ( 	(Math.cos(ry)*Math.cos(rz))+(sy*Math.sin(ry)*Math.sin(rx)*Math.sin(rz)), (sy*Math.sin(ry)*Math.sin(rx)*Math.cos(rz))-(Math.cos(ry)*Math.sin(rz)), (Math.sin(ry)*Math.cos(rx)), sy*ty*Math.sin(ry)*Math.sin(rx),
- 					sy*Math.sin(rz)*Math.cos(rx), sy*Math.cos(rx)*Math.cos(rz), -Math.sin(rx), sy*ty*Math.cos(rx),
- 					(sy*Math.cos(ry)*Math.sin(rx)*Math.sin(rz))-(Math.sin(ry)*Math.cos(rz)), (Math.sin(ry)*Math.sin(rz))+(sy*Math.cos(ry)*Math.sin(rx)*Math.cos(rz)), Math.cos(ry)*Math.cos(rx), sy*ty*Math.cos(ry)*Math.sin(rx),
- 					0, 0, 0, 1	);
+		 //Se pone los valores de la rotacion y traslacion
+     t.set
+			 ( 	1, 0, 0, 0,
+ 					0, Math.cos(angulo), -Math.sin(angulo), 0,
+ 					0, Math.sin(angulo), Math.cos(angulo), 0.5,
+          0, 0, 0, 1	);
 
 			return t;
 		}
+
+
     function matrizTraslacion(tx, ty, tz)
     {
       //Se crea la matriz 4x4
       var t = new THREE.Matrix4();
-      //Se pone los valores de la traslacion y escalado
+      //Se pone los valores de la traslacion
       t.set
  			 ( 	1, 0, 0, tx,
   					0, 1, 0, ty,
@@ -159,7 +156,7 @@
      {
        //Se crea la matriz 4x4
        var t = new THREE.Matrix4();
-       //Se pone los valores de la traslacion y escalado
+       //Se pone los valores de escalado
        t.set
   			 ( 	sx, 0, 0, 0,
    					0, sy, 0, 0,
