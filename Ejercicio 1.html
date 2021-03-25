@@ -27,10 +27,10 @@
 		    document.body.appendChild( renderer.domElement );
 
 		    var size = 10;
-		    var arrowSize = 1;
+		    var arrowSize = 4;
 		    var divisions = size;
 		    var origin = new THREE.Vector3( 0, 0, 0 );
-		    var x = new THREE.Vector3( 1, 0, 0 );
+		    var x = new THREE.Vector3( 2, 0, 0 );
 		    var y = new THREE.Vector3( 0, 1, 0 );
 		    var z = new THREE.Vector3( 0, 0, 1 );
 		    var color1 = new THREE.Color( 0xFFFFFF );
@@ -49,7 +49,7 @@
 		    var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
 		    var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
 		    var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
-		    var geometry = new THREE.ConeGeometry( 1, 1, 16);
+		    var geometry = new THREE.ConeGeometry( 1, 1, 10);
 
 		    //Colores de los conos
 		    var material = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
@@ -62,10 +62,18 @@
 		    //Se pone los conos en la posicion inicial del ejercicio
 		    object.applyMatrix4(matrizEjercicio(90, 0.5));
 		    object.elementsNeedUpdate=true;
+        object.applyMatrix4(matrizRz(18));
+		    object.elementsNeedUpdate=true;
 
 		    object2.applyMatrix4(matrizEjercicio(90, 0.5));
 		    object2.elementsNeedUpdate=true;
+        object2.applyMatrix4(matrizRz(18));
+		    object2.elementsNeedUpdate=true;
 
+
+        //Se rota con respecto a z 90 grados antihorario para poner el punto en la posicion requerida
+        object.applyMatrix4(matrizRz(90));
+		    object.elementsNeedUpdate=true;
 
 		    //Se escala el cono en un factor de 3 en la coordenada z
 		    object.applyMatrix4(matrizEscalado(1,1,3));
@@ -93,9 +101,7 @@
 		    scene.add( arrowY );
 		    scene.add( arrowZ );
 
-		    camera.position.x = 5;
-		    camera.position.y = 5;
-		    camera.position.z =  10;
+		    camera.position.y = 3;
 
 		    camera.lookAt( origin );
 	 }
@@ -109,8 +115,8 @@
 	 function render()
 	 {
 		 var dtime = Date.now()-startTime;
-		 camera.position.x = 10*Math.cos(dtime/10000);
-		 camera.position.z = 10*Math.sin(dtime/10000);
+		 camera.position.x = 4*Math.cos(90);
+		 camera.position.z = 4*Math.sin(90);
 		 camera.lookAt( 0, 0, 0 );
 		 renderer.render( scene, camera );
 	 }
@@ -169,57 +175,55 @@
 
       function matrizRx(angulo)
       {
-
-          //Se crea la matriz 4x4
-          var t = new THREE.Matrix4();
-          //Se pone el angulo en radianes
-          angulo=angulo*(Math.PI/180);
-          //Se pone los valores de la rotacion
-          t.set
-          (1, 0, 0, 0,
+        //Se crea la matriz 4x4
+        var t = new THREE.Matrix4();
+        //Se pone el angulo en radianes
+        angulo=angulo*(Math.PI/180);
+        //Se pone los valores de la rotacion
+        t.set
+        (1, 0, 0, 0,
           0, Math.cos(angulo), -Math.sin(angulo), 0,
           0, Math.sin(angulo), Math.cos(angulo), 0,
           0, 0, 0, 1	);
 
-          return t;
+        return t;
 
       }
 
 
       function matrizRy(angulo)
       {
+        //Se crea la matriz 4x4
+        var t = new THREE.Matrix4();
+        //Se pone el angulo en radianes
+        angulo=angulo*(Math.PI/180);
+        //Se pone los valores de la rotacion
+        t.set
+        (Math.cos(angulo), 0, Math.sin(angulo), 0,
+        0, 1, 0, 0,
+        -Math.sin(angulo), 0, Math.cos(angulo), 0,
+        0, 0, 0, 1);
 
-          //Se crea la matriz 4x4
-          var t = new THREE.Matrix4();
-          //Se pone el angulo en radianes
-          angulo=angulo*(Math.PI/180);
-          //Se pone los valores de la rotacion
-          t.set
-          (Math.cos(angulo), 0, Math.sin(angulo), 0,
-          0, 1, 0, 0,
-          -Math.sin(angulo), 0, Math.cos(angulo), 0,
-          0, 0, 0, 1);
-
-          return t;
+        return t;
 
       }
 
 
       function matrizRz(angulo)
       {
-          //Se crea la matriz 4x4
-          var t = new THREE.Matrix4();
-          //Se pone el angulo en radianes
-          angulo=angulo*(Math.PI/180);
-          //Se pone los valores de la rotacion
-          t.set
-          (Math.cos(angulo), -Math.sin(angulo), 0, 0,
-          Math.sin(angulo), Math.cos(angulo), 0, 0,
-          0, 0, 1, 0,
-          0, 0, 0, 1);
+        //Se crea la matriz 4x4
+        var t = new THREE.Matrix4();
+        //Se pone el angulo en radianes
+        angulo=angulo*(Math.PI/180);
+        //Se pone los valores de la rotacion
+        t.set
+        (Math.cos(angulo), -Math.sin(angulo), 0, 0,
+        Math.sin(angulo), Math.cos(angulo), 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1);
 
-          return t;
-         }
+        return t;
+      }
 
 
    </script>
