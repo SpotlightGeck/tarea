@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Ej: Taller cubo Carlos Felipe Suarez Correal</title>
+   <style>
+     html, body { margin: 0; padding: 0; overflow: hidden; }
+   </style>
+ </head>
+ <body>
+   <script src="js/three.min.js"></script>
+   <script>
+   var scene, aspect, camera, renderer;
+   var startTime = Date.now();
+
+
+   init();
+   animate();
+
+   function init()
+   {
+     scene = new THREE.Scene();
+     aspect = window.innerWidth / window.innerHeight;
+     camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+     renderer = new THREE.WebGLRenderer();
+     renderer.setSize( window.innerWidth, window.innerHeight );
+     document.body.appendChild( renderer.domElement );
+
+     var size = 10;
+     var arrowSize = 1;
+     var divisions = size;
+     var origin = new THREE.Vector3( 0, 0, 0 );
+     var x = new THREE.Vector3( 1, 0, 0 );
+     var y = new THREE.Vector3( 0, 1, 0 );
+		 var z = new THREE.Vector3( 0, 0, 1 );
+		 var color1 = new THREE.Color( 0xFFFFFF );
+		 var color2 = new THREE.Color( 0x333333 );
+		 var colorR = new THREE.Color( 0xAA3333 );
+		 var colorG = new THREE.Color( 0x33AA33 );
+		 var colorB = new THREE.Color( 0x333366 );
+
+		 var axesHelper = new THREE.AxesHelper( size );
+		 var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		 var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		 var gridHelperYZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		 gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+		 gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+		 gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+		 var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+		 var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+		 var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+		 var geometry = new THREE.ConeGeometry( 1, 1, 16);
+
+		 //Colores de los cubos
+		 var material = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
+		 var material2 = new THREE.LineBasicMaterial( { color: 0xFFFFFF } );
+
+		 //Crear los objetos supuerpuestos
+		 object  = new THREE.Mesh( geometry, material );//Primer cubo
+		 object2  = new THREE.Mesh( geometry, material2 );//Segundo cubo
+
+     var rx=18.435*(Math.PI/180);
+     var ry=45*(Math.PI/180);
+     var rz=45*(Math.PI/180);
+     var ty=1;
+     var sy=3;
+     var a = new THREE.Matrix4();
+
+		 //Se pone los valores de la traslacion y escalado
+		 a.set
+			 ( 	1, 0, 0, 0,
+ 					0, Math.cos(ry), -Math.sin(ry), 0,
+ 					0, Math.sin(ry), Math.cos(ry), 0,
+          0, 0, 0, 1	);
+
+     object.applyMatrix4(a);
+		 object.elementsNeedUpdate=true;
+
+
+
+
+
+		 //Se añaden los 3 cubos a la escena
+		 scene.add( object );
+		 //scene.add( object2 );
+
+
+		 scene.add( gridHelperXZ );
+		 scene.add( arrowX );
+		 scene.add( arrowY );
+		 scene.add( arrowZ );
+
+		 camera.position.x = 5;
+		 camera.position.y = 5;
+		 camera.position.z =  10;
+
+		 camera.lookAt( origin );
+	 }
+
+	 function animate()
+	 {
+		 render();
+		 requestAnimationFrame( animate );
+	 }
+
+	 function render()
+	 {
+		 var dtime = Date.now()-startTime;
+		 camera.position.x = 10*Math.cos(dtime/10000);
+		 camera.position.z = 10*Math.sin(dtime/10000);
+		 camera.lookAt( 0, 0, 0 );
+		 renderer.render( scene, camera );
+	 }
+
+
+
+	 //Funcion de la matrizEjercicio
+	 function matrizEjercicio(rx, ry, rz, ty, sy)
+	 {
+		 //Se crea la matriz 4x4
+		 var t = new THREE.Matrix4();
+
+		 //Se pone los valores de la traslacion y escalado
+		 t.set
+			 ( 	(Math.cos(ry)*Math.cos(rz))+(sy*Math.sin(ry)*Math.sin(rx)*Math.sin(rz)), (sy*Math.sin(ry)*Math.sin(rx)*Math.cos(rz))-(Math.cos(ry)*Math.sin(rz)), (Math.sin(ry)*Math.cos(rx)), sy*ty*Math.sin(ry)*Math.sin(rx),
+ 					sy*Math.sin(rz)*Math.cos(rx), sy*Math.cos(rx)*Math.cos(rz), -Math.sin(rx), sy*ty*Math.cos(rx),
+ 					(sy*Math.cos(ry)*Math.sin(rx)*Math.sin(rz))-(Math.sin(ry)*Math.cos(rz)), (Math.sin(ry)*Math.sin(rz))+(sy*Math.cos(ry)*Math.sin(rx)*Math.cos(rz)), Math.cos(ry)*Math.cos(rx), sy*ty*Math.cos(ry)*Math.sin(rx),
+ 					0, 0, 0, 1	);
+
+			return t;
+		}
+
+
+   </script>
+ </body>
+</html>
